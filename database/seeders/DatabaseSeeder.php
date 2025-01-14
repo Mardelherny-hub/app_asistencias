@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Database\Seeders\RolesAndPermissionsSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -18,5 +19,19 @@ class DatabaseSeeder extends Seeder
         //     'name' => 'Test User',
         //     'email' => 'test@example.com',
         // ]);
+        //crear usuario eventmanager@example.com
+        \App\Models\User::factory()->create([
+            'name' => 'Event Manager',
+            'email' => 'eventmanager@example.com',
+            'password' => bcrypt('12345678')
+        ]);
+        \App\Models\User::factory()->create([
+            'name' => 'Super Admin',
+            'email' => 'superadmin@example.com',
+            'password' => bcrypt('12345678')
+        ]);
+        $this->call([ RolesAndPermissionsSeeder::class, ]);
+        $this->call([ SpeakerSeeder::class, ]);
+        $this->call([ EventSeeder::class, ]);
     }
 }

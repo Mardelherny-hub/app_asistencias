@@ -300,38 +300,47 @@ return [
 
     'menu' => [
         // Navbar items:
-        [
-            'type' => 'navbar-search',
-            'text' => 'search',
-            'topnav_right' => true,
-        ],
+        /**
+        
+         ** [
+         *   'type' => 'navbar-search',
+         *   'text' => 'search',
+         *   'topnav_right' => true,
+         *   ,
+         */
+        
         [
             'type' => 'fullscreen-widget',
             'topnav_right' => true,
         ],
 
         // Sidebar items:
+        //[
+        //    'type' => 'sidebar-menu-search',
+        //    'text' => 'search',
+        //],
+        //[
+        //    'text' => 'blog',
+        //    'url' => 'admin/blog',
+        //    'can' => 'manage-blog',
+        //],
         [
-            'type' => 'sidebar-menu-search',
-            'text' => 'search',
-        ],
-        [
-            'text' => 'blog',
-            'url' => 'admin/blog',
-            'can' => 'manage-blog',
-        ],
-        [
-            'text' => 'pages',
-            'url' => 'admin/pages',
-            'icon' => 'far fa-fw fa-file',
-            'label' => 4,
+            'text' => 'Admin Panel',
+            'url' => 'admin',
+            'icon' => 'fa fa-home',
             'label_color' => 'success',
         ],
-        ['header' => 'account_settings'],
+        ['header' => 'Usuarios'],
         [
-            'text' => 'profile',
-            'url' => 'admin/settings',
+            'text' => 'Usuarios',
+            'url' => 'admin/users',
             'icon' => 'fas fa-fw fa-user',
+        ],
+        ['header' => 'Eventos'],
+        [
+            'text' => 'Eventos',
+            'url' => 'admin/events',
+            'icon' => 'fas fa-fw fa-calendar-alt',
         ],
         [
             'text' => 'change_password',
@@ -475,7 +484,7 @@ return [
             ],
         ],
         'Sweetalert2' => [
-            'active' => false,
+            'active' => true,
             'files' => [
                 [
                     'type' => 'js',

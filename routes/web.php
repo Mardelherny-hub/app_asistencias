@@ -3,7 +3,14 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
+use App\Http\Controllers\WelcomeController;
+use App\Http\Controllers\EventController;
 use App\Http\Controllers\Admin\HomeController;
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\AdminEventController;
+use App\Http\Controllers\Admin\TalkController;
+use App\Http\Controllers\Admin\AttendanceController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -15,22 +22,63 @@ use App\Http\Controllers\Admin\HomeController;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-
-Route::get('/', function () {
-    return view('welcome');
-});
+/**
+ * Rutas públicas
+ */
+Route::get('/', WelcomeController::class);
 
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+Route::get('/events/{event}/program', [EventController::class, 'showProgram'])
+     ->name('event.program');
+
+/**
+ * fin rutas públicas
+ */
+
+ /**
+  * Middlewares
+  */
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::get('/admin', [HomeController::class, 'index'])->name('admin.index');
+/**
+ * fin Middlewares
+ */
+
+/**
+ * rutas para administración
+ */
+Route::middleware(['auth'])->prefix('admin')->group(function () {
+    // Dashboard de administración
+    Route::get('/', [HomeController::class, 'index'])->name('admin.index');
+
+    // ususarios
+    Route::resource('users', UserController::class)
+    ->names('admin.users');
+
+    // CRUD de eventos
+    Route::resource('/events', AdminEventController::class)
+    ->names('admin.events');
+
+    // CRUD de charlas (Talks)
+    Route::resource('/talks', TalkController::class)
+    ->names('admin.talks');
+    Route::get('talks/{talk}/qr', [TalkController::class, 'showQr'])
+    ->name('admin.talks.qr');
+
+});
+
+// Ruta pública para marcar asistencia
+Route::get('/attendance/{code}', [AttendanceController::class, 'markAttendance'])
+    ->name('attendance.mark')
+    ->middleware('auth');
+
 
 Route::get('/clear', function() {
     Artisan::call('config:clear');

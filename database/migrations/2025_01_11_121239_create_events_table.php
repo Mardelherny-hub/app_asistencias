@@ -9,9 +9,9 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    // database/migrations/[timestamp]_create_events_table.php
     public function up()
     {
+        // Tabla events
         Schema::create('events', function (Blueprint $table) {
             $table->id();
             $table->string('name');
@@ -19,61 +19,69 @@ return new class extends Migration
             $table->dateTime('start_date');
             $table->dateTime('end_date');
             $table->string('location')->nullable();
-            $table->foreignId('user_id')->constrained(); // Organizador del evento
+            $table->enum('type', ['conference', 'workshop', 'webinar'])->nullable(); // Clasificación
+            $table->foreignId('user_id')->constrained(); // Organizador
             $table->timestamps();
+            $table->softDeletes(); // Eliminación lógica
         });
-    
 
-        // database/migrations/[timestamp]_create_talks_table.php
-    
+        // Tabla speakers
+        Schema::create('speakers', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('email')->nullable();
+            $table->text('bio')->nullable(); // Biografía
+            $table->string('photo')->nullable(); // Ruta a la foto del ponente
+            $table->timestamps();
+            $table->softDeletes();
+        });
 
+        // Tabla talks
         Schema::create('talks', function (Blueprint $table) {
             $table->id();
             $table->string('title');
             $table->text('description')->nullable();
             $table->dateTime('start_time');
             $table->dateTime('end_time');
+            $table->string('location')->nullable(); // Ubicación de la charla
+            $table->string('qr_code')->nullable(); // Código QR de la charla
             $table->foreignId('event_id')->constrained()->onDelete('cascade');
-            $table->string('speaker_name');
+            $table->foreignId('speaker_id')->nullable()->constrained()->onDelete('set null'); // Relación con speakers
             $table->timestamps();
+            $table->softDeletes();
         });
-   
-        // database/migrations/[timestamp]_create_attendances_table.php
-    
-            Schema::create('attendances', function (Blueprint $table) {
+
+        // Tabla attendances
+        Schema::create('attendances', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained();
             $table->foreignId('talk_id')->constrained();
             $table->timestamp('check_in_time');
             $table->timestamps();
+            $table->softDeletes();
         });
-   
-        // database/migrations/[timestamp]_create_surveys_table.php
-    
-          Schema::create('surveys', function (Blueprint $table) {
+
+        // Tabla surveys
+        Schema::create('surveys', function (Blueprint $table) {
             $table->id();
             $table->string('title');
             $table->foreignId('talk_id')->constrained();
             $table->timestamps();
+            $table->softDeletes();
         });
-   
 
-        // database/migrations/[timestamp]_create_questions_table.php
-    
-  
+        // Tabla questions
         Schema::create('questions', function (Blueprint $table) {
             $table->id();
             $table->foreignId('survey_id')->constrained()->onDelete('cascade');
             $table->string('question_text');
             $table->enum('type', ['multiple_choice', 'text', 'rating']);
-            $table->json('options')->nullable(); // Para preguntas de opción múltiple
+            $table->json('options')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
-   
 
-        // database/migrations/[timestamp]_create_survey_responses_table.php
-    
-   
+        // Tabla survey_responses
         Schema::create('survey_responses', function (Blueprint $table) {
             $table->id();
             $table->foreignId('survey_id')->constrained();
@@ -81,19 +89,22 @@ return new class extends Migration
             $table->foreignId('question_id')->constrained();
             $table->text('response');
             $table->timestamps();
+            $table->softDeletes();
         });
-  
     }
+
     /**
      * Reverse the migrations.
      */
-    public function down(): void
+    public function down()
     {
-        Schema::dropIfExists('events');
-        Schema::dropIfExists('attendances');
-        Schema::dropIfExists('surveys');
-        Schema::dropIfExists('questions');
         Schema::dropIfExists('survey_responses');
-        
+        Schema::dropIfExists('questions');
+        Schema::dropIfExists('surveys');
+        Schema::dropIfExists('attendances');
+        Schema::dropIfExists('talks');
+        Schema::dropIfExists('speakers');
+        Schema::dropIfExists('events');
     }
 };
+
