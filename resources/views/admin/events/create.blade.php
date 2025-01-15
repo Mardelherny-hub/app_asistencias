@@ -18,8 +18,17 @@
         <div class="col-12 col-lg-8">
             <div class="card shadow-sm">
                 <div class="card-body">
+                    @if ($event)
+                        <div class="alert alert-info">
+                            Creando charla para el evento: <strong>{{ $event->title }}</strong>
+                        </div>
+                    @endif
+
                     <form action="{{ route('admin.events.store') }}" method="POST">
                         @csrf
+                        @if ($event)
+                            <input type="hidden" name="event_id" value="{{ $event->id }}">
+                        @endif
                         @include('admin.events.partials.form')
                     </form>
                 </div>

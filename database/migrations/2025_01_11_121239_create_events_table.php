@@ -45,11 +45,15 @@ return new class extends Migration
             $table->dateTime('end_time');
             $table->string('location')->nullable(); // Ubicación de la charla
             $table->string('qr_code')->nullable(); // Código QR de la charla
-            $table->foreignId('event_id')->constrained()->onDelete('cascade');
-            $table->foreignId('speaker_id')->nullable()->constrained()->onDelete('set null'); // Relación con speakers
+            $table->foreignId('event_id')->references('id')->on('events')->constrained()->onUpdate('cascade')->onDelete('cascade');
+            $table->foreignId('speaker_id')->nullable()->constrained()->onDelete('set null');
             $table->timestamps();
             $table->softDeletes();
+        
+            // Validación de no superposición de horarios entre charlas del mismo evento
+            $table->unique(['event_id', 'start_time', 'end_time']);
         });
+        
 
         // Tabla attendances
         Schema::create('attendances', function (Blueprint $table) {

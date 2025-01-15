@@ -343,9 +343,9 @@ return [
             'icon' => 'fas fa-fw fa-calendar-alt',
         ],
         [
-            'text' => 'change_password',
-            'url' => 'admin/settings',
-            'icon' => 'fas fa-fw fa-lock',
+            'text' => 'Charlas',
+            'url' => 'admin/talks',
+            'icon' => 'fas fa-microphone',
         ],
         [
             'text' => 'multilevel',

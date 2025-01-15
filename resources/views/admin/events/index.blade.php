@@ -73,13 +73,10 @@
 
                     <!-- Botones de acción -->
                     <div class="d-flex flex-wrap gap-2 justify-content-end">
-                        <button type="button" 
-                                class="btn btn-info btn-sm"
-                                onclick="prepareTalkModal({{ $event->id }}, '{{ $event->start_date }}', '{{ $event->end_date }}')"
-                                data-bs-toggle="modal" 
-                                data-bs-target="#quickTalkModal">
+                        <a href="{{ route('admin.talks.create', ['event' => $event->id]) }}" 
+                                class="btn btn-info btn-sm">
                             <i class="fas fa-microphone me-1"></i> Agregar Charla
-                        </button>
+                        </a>
                         <a href="{{ route('admin.events.show', $event->id) }}" 
                            class="btn btn-success mx-2">
                             <i class="fas fa-eye me-1"></i> Ver
@@ -127,49 +124,6 @@
 
     <div class="mt-4">
         {{ $events->links() }}
-    </div>
-</div>
-
-<div class="modal fade" id="quickTalkModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Agregar Charla Rápida</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <form id="quickTalkForm" action="{{ route('admin.talks.store') }}" method="POST">
-                @csrf
-                <input type="hidden" name="event_id" id="eventIdInput">
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label for="title" class="form-label">Título<span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" id="title" name="title" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="speaker" class="form-label">Ponente<span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" id="speaker" name="speaker" required>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="start_time" class="form-label">Hora Inicio<span class="text-danger">*</span></label>
-                            <input type="time" class="form-control" id="start_time" name="start_time" required>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="end_time" class="form-label">Hora Fin<span class="text-danger">*</span></label>
-                            <input type="time" class="form-control" id="end_time" name="end_time" required>
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <label for="description" class="form-label">Descripción</label>
-                        <textarea class="form-control" id="description" name="description" rows="3"></textarea>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn-primary">Guardar Charla</button>
-                </div>
-            </form>
-        </div>
     </div>
 </div>
 

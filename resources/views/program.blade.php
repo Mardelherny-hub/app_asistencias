@@ -18,7 +18,6 @@
                 <nav class="flex justify-between items-center h-16 md:h-20">
                     <a href="/" class="flex items-center space-x-3 focus:outline-none focus:ring-2 focus:ring-white/50 rounded-lg">
                         <img src="{{ asset('img/logo.webp') }}" alt="UNAM Logo" class="h-10 md:h-14 w-auto">
-                        <span class="text-white font-semibold hidden md:block">Eventos UNAM</span>
                     </a>
                     <div class="flex items-center space-x-4">
                         <a href="/" class="text-white hover:text-gray-200 transition-colors duration-200 flex items-center">
@@ -29,8 +28,13 @@
                         </a>
                         @auth
                             <a href="{{ route('dashboard') }}" 
-                               class="bg-white/10 text-white px-4 py-2 rounded-lg hover:bg-white/20 transition-colors duration-200">
-                                Dashboard
+                               class="bg-white/10 text-white px-4 py-2 rounded-lg hover:bg-white/20 transition-colors duration-200 text-sm md:text-base flex items-center">
+                                <span class="mr-2">
+                                    <svg class="w-5 h-5 text-white/80" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
+                                    </svg>
+                                </span>
+                                {{ Str::words(Auth::user()->name, 1, '') }}
                             </a>
                         @else
                             <a href="{{ route('login') }}" 
@@ -139,7 +143,7 @@
                                @auth
                                    <div class="flex flex-col sm:flex-row items-center justify-between gap-4 mt-6 pt-4 border-t border-gray-200">
                                        <!-- QR Code Button -->
-                                       <a href="{{ $talk->getQrCodeUrl() }}"
+                                       <a href="{{-- $talk->getQrCodeUrl() --}}#"
                                           class="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3 bg-[#1C3D6C] text-white rounded-lg hover:bg-[#2C4D71] transition-all duration-200 transform hover:-translate-y-1 shadow-md hover:shadow-lg">
                                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 

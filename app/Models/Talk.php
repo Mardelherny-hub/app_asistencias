@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
+
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class Talk extends Model {
@@ -39,12 +41,12 @@ class Talk extends Model {
 
     /**
      * Get the QR code URL for attendance
-     */
-    public function getQrCodeUrl()
-    {
-        return route('attendance.mark', ['code' => $this->qr_code]);
-    }
-
+     
+    *public function getQrCodeUrl()
+    *{
+    *    return route('attendance.mark', ['code' => $this->qr_code]);
+    *}   
+    */
     /**
      * realción de Talk con speaker
      */
@@ -63,6 +65,26 @@ class Talk extends Model {
 
     public function survey() {
         return $this->hasOne(Survey::class);
+    }
+
+    // Validar que el tiempo de la charla esté dentro del rango del evento
+    public function isWithinEventTime(): bool
+    {
+        $event = $this->event;
+
+        return Carbon::parse($this->start_time)->between($event->start_date, $event->end_date) &&
+               Carbon::parse($this->end_time)->between($event->start_date, $event->end_date);
+    }
+
+    // Validar que no haya superposición con otras charlas del mismo evento
+    public function overlapsWithOtherTalks(): bool
+    {
+        return self::where('event_id', $this->event_id)
+                   ->where(function ($query) {
+                       $query->whereBetween('start_time', [$this->start_time, $this->end_time])
+                             ->orWhereBetween('end_time', [$this->start_time, $this->end_time]);
+                   })
+                   ->exists();
     }
 
 }

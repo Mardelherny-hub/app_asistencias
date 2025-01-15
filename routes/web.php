@@ -15,7 +15,7 @@ use App\Http\Controllers\Admin\AttendanceController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
-|--------------------------------------------------------------------------
+|-------------------------------------------------------------------------- 
 |
 | Here is where you can register web routes for your application. These
 | routes are loaded by the RouteServiceProvider and all of them will
@@ -69,6 +69,9 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     // CRUD de charlas (Talks)
     Route::resource('/talks', TalkController::class)
     ->names('admin.talks');
+    Route::get('/talks/create/{event?}', [TalkController::class, 'create'])
+    ->name('admin.talks.create');
+
     Route::get('talks/{talk}/qr', [TalkController::class, 'showQr'])
     ->name('admin.talks.qr');
 

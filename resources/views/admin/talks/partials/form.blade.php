@@ -1,3 +1,30 @@
+@if ($event)
+    <!-- Campo oculto si el evento ya está definido -->
+    <input type="hidden" name="event_id" value="{{ $event->id }}">
+    <div class="alert alert-info">
+        Creando charla para el evento: <strong>{{ $event->name }}</strong>
+    </div>
+@else
+    <!-- Select para elegir un evento si no está definido -->
+    <div class="mb-3">
+        <label for="event_id" class="form-label">Evento</label>
+        <select class="form-control @error('event_id') is-invalid @enderror" 
+                id="event_id" 
+                name="event_id" 
+                required>
+            <option value="">Seleccionar evento</option>
+            @foreach($events as $e)
+                <option value="{{ $e->id }}" 
+                    {{ old('event_id', $talk->event_id ?? '') == $e->id ? 'selected' : '' }}>
+                    {{ $e->name }}
+                </option>
+            @endforeach
+        </select>
+        @error('event_id')
+            <div class="invalid-feedback">{{ $message }}</div>
+        @enderror
+    </div>
+@endif
 <div class="mb-3">
     <label for="title" class="form-label">Título de la Charla</label>
     <input type="text" 
@@ -34,7 +61,7 @@
     <div class="col-md-6">
         <div class="mb-3">
             <label for="start_time" class="form-label">Hora de Inicio</label>
-            <input type="time" 
+            <input type="datetime-local" 
                    class="form-control @error('start_time') is-invalid @enderror" 
                    id="start_time" 
                    name="start_time" 
@@ -48,7 +75,7 @@
     <div class="col-md-6">
         <div class="mb-3">
             <label for="end_time" class="form-label">Hora de Fin</label>
-            <input type="time" 
+            <input type="datetime-local" 
                    class="form-control @error('end_time') is-invalid @enderror" 
                    id="end_time" 
                    name="end_time" 
